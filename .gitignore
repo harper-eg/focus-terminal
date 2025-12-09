@@ -1,1 +1,3 @@
 PODCAST_SETUP.md
+dist/**
+node_modules/**
