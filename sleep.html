@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Sleep Mode - Podcast Player</title>
+    <link rel="stylesheet" href="sleep.css">
+</head>
+<body>
+
+    <div id="back-section">
+        <button id="back-btn" style="background: none; border: none; color: #4A90E2; font-family: 'SF Mono', monospace; font-size: 11pt; cursor: pointer; padding: 5px 15px;">< Back</button>
+    </div>
+
+    <div id="sleep-header">
+        <pre id="sleep-title">
+# SLEEP MODE - PODCAST PLAYER
+Press Cmd+[ to return to dashboard
+        </pre>
+    </div>
+
+    <!-- Episode Selection Screen -->
+    <div id="episode-selection">
+        <div class="section-header"># SELECT AN EPISODE</div>
+        <div id="episode-list"></div>
+        <div id="no-episodes" class="hidden">
+            <p>No podcast episodes found.</p>
+            <p>Add audio files to: <span id="podcast-path"></span></p>
+        </div>
+    </div>
+
+    <!-- Audio Player Screen (hidden initially) -->
+    <div id="player-screen" class="hidden">
+        <div class="section-header"># NOW PLAYING</div>
+
+        <div id="episode-title">Loading...</div>
+
+        <div id="progress-container">
+            <div id="time-current">00:00</div>
+            <div id="progress-bar-container">
+                <div id="progress-bar"></div>
+            </div>
+            <div id="time-total">00:00</div>
+        </div>
+
+        <div id="controls">
+            <button id="btn-back" class="control-btn">← 15s</button>
+            <button id="btn-play-pause" class="control-btn">▶ PLAY</button>
+            <button id="btn-forward" class="control-btn">15s →</button>
+            <button id="btn-speed" class="control-btn">1.0x</button>
+        </div>
+
+        <div id="back-to-list">
+            <button id="btn-back-list" class="control-btn">← Back to Episode List</button>
+        </div>
+    </div>
+
+    <audio id="audio-player"></audio>
+
+    <!-- Exit challenge modal (shown when trying to exit during 7pm-9pm) -->
+    <div id="exit-challenge-modal" class="hidden">
+        <div class="modal-content">
+            <div id="exit-prompt">SOLVE TO EXIT SLEEP MODE:</div>
+            <input type="number" id="exit-input" autofocus autocomplete="off">
+            <div style="margin-top: 15px; color: #666; font-size: 10pt;">Press ESC to cancel</div>
+        </div>
+    </div>
+
+    <script src="sleep.js"></script>
+</body>
+</html>

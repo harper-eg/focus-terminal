@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Focus Terminal</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div id="top-bar">
+        <pre id="motd">
+# TODAY'S FOCUS
+"The optionality is the trap. Pick one."
+        </pre>
+        <div id="clock"></div>
+    </div>
+
+    <div id="main-options">
+        <div id="workspace-container">
+            <div class="list-header"># AVAILABLE WORKSPACES</div>
+            <ul>
+                <li class="workspace-item" onclick="runWorkspace('369A')" tabindex="1">
+                    <span class="key-index">1</span> ECE 369A
+                </li>
+                <li class="workspace-item" onclick="runWorkspace('373')" tabindex="2">
+                    <span class="key-index">2</span> ECE 373
+                </li>
+                <li class="workspace-item" onclick="runWorkspace('320A')" tabindex="3">
+                    <span class="key-index">3</span> ECE 320A
+                </li>
+                <li class="workspace-item" onclick="runWorkspace('310')" tabindex="4">
+                    <span class="key-index">4</span> ECE 310
+                </li>
+                <li class="workspace-item" onclick="runWorkspace('Research')" tabindex="5">
+                    <span class="key-index">5</span> Research
+                </li>
+                <li class="workspace-item" onclick="runWorkspace('TEA')" tabindex="6">
+                    <span class="key-index">6</span> TEA Club
+                </li>
+                <li class="workspace-item" onclick="runWorkspace('Anki')" tabindex="7">
+                    <span class="key-index">7</span> Anki / Review
+                </li>
+                <li class="workspace-item" onclick="runWorkspace('Misc Work')" tabindex="8">
+                    <span class="key-index">8</span> Misc. Work
+                </li>
+                <li class="workspace-item" onclick="runWorkspace('Relaxation')" tabindex="9">
+                    <span class="key-index">9</span> Relaxation
+                </li>
+            </ul>
+            <div id="status-log"></div>
+        </div>
+
+        <div id="todo-container">
+            <div class="list-header"># TODO</div>
+            <div id="todo-box">
+                <ul id="todo-list">
+                    <!-- Tasks loaded dynamically from todos.json -->
+                </ul>
+                <div id="add-task-bar" tabindex="-1">
+                    <input type="text" id="task-text-input" placeholder="New task..." autocomplete="off">
+                    <input type="text" id="task-date-input" placeholder="MM/DD" maxlength="5" autocomplete="off">
+                    <div id="task-priority-toggle" data-priority="high">HP</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="right-container">
+            <div id="sleep-container">
+                <div class="list-header"># SLEEP MODE</div>
+                <ul>
+                    <li class="workspace-item" onclick="runSleepMode()" tabindex="10">
+                        <span class="key-index">S</span> Podcasts
+                    </li>
+                </ul>
+            </div>
+
+            <div id="stats-container">
+                <div class="list-header"># ANALYTICS</div>
+                <ul>
+                    <li class="workspace-item" onclick="runStatsMode()" tabindex="11">
+                        <span class="key-index">T</span> Statistics
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="calendar-section">
+         <div id="calendar-container">
+            <iframe src="https://calendar.google.com/calendar/embed?height=500&wkst=7&ctz=America%2FPhoenix&mode=WEEK&showTitle=0&showNav=0&showDate=0&showPrint=0&showTabs=0&showTz=0&src=aGFycGVyZ2liYnM5QGdtYWlsLmNvbQ&src=MzMxNWQ2NDNkODJjZDVjY2FhMjIzZTUwMTZmYjNhNjk2ZTJiNGYxOWU1YmZiMzcxMDE4YmE5Mjc4YjE5OGZkY0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=ZjljODBiNzE1MWEzMDJkZDUxM2U5MWY3ZGRjY2ZjOTJmNDllOGU1NTI1ZDdhOGQ4ZmFjNzhjYWYwNjE2ZWQ4YkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=ZjFmZTFmMDJlNmE5ZDAzZjJiZGEzNWMwNWQ1MjI1NjMzNzJkYjUxZjMyMTQxMzMwMDYyM2MyNTkwYWRjYTkwMUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Mjg1MDgxYTQ2ZjZkZWU2NjhiZTJlZjkwNGU1NzM2ZjFjODBkMDM3ODI4ZjM0N2NiNWRkYjg2MzI3NzM0YjZlYkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=MDBiNjg5OTkyM2ZiMDExZTJmZDg5OWIxYmYzYjlkMjQ3MDMzMzMwN2NkZjM1OWEwMjZhODExMzk2NDQyNDVlYUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=MDI0MWZlYjIwMTYxYmQyMGYyZDgxMTQ1YTM1MDY2NDE3MmNiMzg5ZDBmNDJjNzgwNzczNTMxOTlmMmFkZDczNEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=anM0bTVxaGNhaGdlamM2YXZqcXRqZDBzZGp2YWRkY29AaW1wb3J0LmNhbGVuZGFyLmdvb2dsZS5jb20&src=aGFycGVyZ2liYnNAYXJpem9uYS5lZHU&color=%23fffcf5&color=%235d8c42&color=%238492d3&color=%23d00000&color=%235d8c42&color=%23f6bf26&color=%23795548&color=%23d74538&color=%238492d3" style="border-width:0" width="1000" height="500" frameborder="0" scrolling="no"></iframe>
+            </div>
+    </div>
+
+    <div id="quit-modal" class="hidden">
+        <div class="modal-content">
+            <div id="quit-prompt">SOLVE TO EXIT:</div>
+            <input type="number" id="quit-input" autofocus autocomplete="off">
+        </div>
+    </div>
+
+    <script src="renderer.js"></script>
+</body>
+</html>

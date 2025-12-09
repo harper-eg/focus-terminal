@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Statistics - Focus Terminal</title>
+    <link rel="stylesheet" href="stats.css">
+</head>
+<body>
+
+    <div id="back-section">
+        <button id="back-btn" style="background: none; border: none; color: #4A90E2; font-family: 'SF Mono', monospace; font-size: 11pt; cursor: pointer; padding: 5px 15px;">< Back</button>
+    </div>
+
+    <div id="stats-header">
+        <pre id="stats-title">
+# WORKSPACE STATISTICS
+Press Cmd+[ to return to dashboard
+        </pre>
+    </div>
+
+    <div id="stats-content">
+        <div class="stats-section">
+            <div class="section-header"># TOTAL TIME BY WORKSPACE</div>
+            <pre id="time-chart" class="chart"></pre>
+        </div>
+
+        <div class="stats-section">
+            <div class="section-header"># WORKSPACE BREAKDOWN</div>
+            <div id="workspace-list"></div>
+        </div>
+
+        <div class="stats-section">
+            <div class="section-header"># RECENT SESSIONS</div>
+            <div id="recent-sessions"></div>
+        </div>
+
+        <div class="stats-section">
+            <div class="section-header"># ACTIVITY CHART (LAST 7 DAYS)</div>
+            <pre id="activity-chart" class="chart"></pre>
+        </div>
+    </div>
+
+    <script src="stats.js"></script>
+</body>
+</html>

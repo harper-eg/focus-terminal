@@ -1,0 +1,315 @@
+body {
+    background-color: #000000;
+    color: #F2F2F2; /* Standard Terminal White/Gray */
+    font-family: 'SF Mono', 'Menlo', 'Monaco', monospace; /* The native macOS mono stack */
+    font-size: 11pt; /* Matches your spec */
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    /* No text shadow - keep it crisp */
+}
+
+/* TOP: MOTD */
+#top-bar {
+    padding: 10px 15px;
+    flex: 0 0 auto;
+    position: relative;
+}
+
+#clock {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 11pt;
+    color: #666;
+    font-family: 'SF Mono', 'Menlo', 'Monaco', monospace;
+}
+
+/* MIDDLE: WORKSPACES AND SLEEP MODE */
+#main-options {
+    display: flex;
+    gap: 40px;
+    padding: 0 15px;
+    flex: 1;
+    overflow-y: auto;
+}
+
+#workspace-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+#todo-container {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#todo-box {
+    border: 1px solid #ffffff;
+    padding: 15px;
+    margin-top: 5px;
+    min-height: 180px;
+    width: 100%;
+    max-width: 500px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    max-height: 400px;
+    overflow: visible;
+}
+
+#todo-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex: 1;
+    min-height: 0;
+}
+
+.todo-item {
+    display: flex;
+    align-items: center;
+    padding: 3px 0;
+    color: #F2F2F2;
+    position: relative;
+}
+
+.todo-item.top-task::before {
+    content: "→";
+    position: absolute;
+    left: -40px;
+    top: 50%;
+    transform: translateY(-60%);
+    color: #00ff00;
+    font-size: 18pt;
+    line-height: 1;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.todo-separator {
+    list-style: none;
+    color: #666;
+    padding: 5px 0;
+    text-align: left;
+}
+
+.todo-checkbox {
+    width: 12px;
+    height: 12px;
+    border: 1px solid #ffffff;
+    border-radius: 50%;
+    margin-right: 10px;
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.todo-checkbox:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.todo-text {
+    font-family: 'SF Mono', 'Menlo', 'Monaco', monospace;
+    font-size: 11pt;
+}
+
+#add-task-bar {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid #444;
+    align-items: center;
+    flex-shrink: 0;
+    outline: none;
+}
+
+#add-task-bar:focus {
+    border-top-color: #ffffff;
+}
+
+#add-task-bar:focus #task-text-input,
+#add-task-bar:focus #task-date-input,
+#add-task-bar:focus #task-priority-toggle {
+    border-color: #ffffff;
+}
+
+#task-text-input {
+    flex: 1;
+    background: #000;
+    border: 1px solid #666;
+    color: #F2F2F2;
+    font-family: 'SF Mono', 'Menlo', 'Monaco', monospace;
+    font-size: 11pt;
+    padding: 4px 6px;
+    outline: none;
+}
+
+#task-text-input:focus {
+    border-color: #ffffff;
+}
+
+#task-date-input {
+    width: 60px;
+    background: #000;
+    border: 1px solid #666;
+    color: #F2F2F2;
+    font-family: 'SF Mono', 'Menlo', 'Monaco', monospace;
+    font-size: 11pt;
+    padding: 4px 6px;
+    outline: none;
+    text-align: center;
+}
+
+#task-date-input:focus {
+    border-color: #ffffff;
+}
+
+#task-priority-toggle {
+    width: 30px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #666;
+    font-family: 'SF Mono', 'Menlo', 'Monaco', monospace;
+    font-size: 10pt;
+    font-weight: bold;
+    cursor: pointer;
+    user-select: none;
+}
+
+#task-priority-toggle[data-priority="high"] {
+    color: #ff0000;
+    border-color: #ff0000;
+}
+
+#task-priority-toggle[data-priority="low"] {
+    color: #0080ff;
+    border-color: #0080ff;
+}
+
+#task-priority-toggle:hover {
+    opacity: 0.7;
+}
+
+#right-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+#sleep-container {
+    flex: 0 0 auto;
+}
+
+#stats-container {
+    flex: 0 0 auto;
+}
+
+.list-header {
+    color: #666; /* Dimmed comment style */
+    margin-bottom: 5px;
+}
+
+#stats-container .list-header {
+    margin-top: 60px;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* The Line Item Look */
+.workspace-item {
+    cursor: pointer;
+    padding: 2px 5px; /* Very tight spacing */
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* The "Selected/Active" look from your screenshot (Red background) */
+.workspace-item:hover, .workspace-item.active {
+    background-color: #8d0e19; /* "Pro" Profile Red */
+    color: #ffffff;
+}
+
+.key-index {
+    display: inline-block;
+    width: 25px;
+    opacity: 0.6;
+}
+
+/* STATUS LOG (Tiny feedback) */
+#status-log {
+    margin-top: 10px;
+    color: #666;
+    font-size: 10pt;
+    min-height: 1.2em;
+}
+
+/* BOTTOM: CALENDAR */
+#calendar-section {
+    /* Height: 40vh means 40% of the screen height (Between 1/3 and 1/2) */
+    flex: 0 0 60vh; 
+    
+    /* Margins: We use padding here to push the calendar away from the edges */
+    /* Top: 15px (Gap from the line above) */
+    /* Sides: 40px (Centering it nicely) */
+    /* Bottom: 40px (Lift it off the bottom of the screen) */
+    padding: 5px 70px 70px 70px; 
+    
+    background: #000;
+    box-sizing: border-box; /* Critical: Ensures padding doesn't break the layout */
+}
+
+#calendar-container {
+    width: 100%;
+    height: 100%;
+    
+    /* The Border: A clean, subtle terminal gray */
+    border: 1px solid #444; 
+    
+    /* Optional: Deep dark background to frame the widget */
+    background-color: #0d0d0d;
+}
+
+/* Clean Iframe */
+iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    /* No more inversion filters - just raw calendar */
+}
+
+/* QUIT MODAL - Simplified */
+.hidden { display: none !important; }
+#quit-modal {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.95);
+    display: flex; justify-content: center; align-items: center;
+    z-index: 999;
+}
+.modal-content { 
+    color: #F2F2F2; 
+    text-align: center; 
+    font-family: 'SF Mono', monospace;
+}
+#quit-input { 
+    background: #222; 
+    border: 1px solid #444; 
+    color: #fff; 
+    padding: 5px; 
+    font-family: 'SF Mono', monospace; 
+    outline: none;
+    margin-top: 10px;
+}

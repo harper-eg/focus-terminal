@@ -1,0 +1,52 @@
+{
+  "name": "focus-terminal",
+  "version": "1.0.0",
+  "description": "A focus-oriented productivity terminal with workspace management and podcast player",
+  "author": "Harper Gibbs",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --mac",
+    "build:dir": "electron-builder --mac --dir"
+  },
+  "build": {
+    "appId": "com.harpergibbs.focus-terminal",
+    "productName": "Focus Terminal",
+    "mac": {
+      "category": "public.app-category.productivity",
+      "target": [
+        "dmg",
+        "zip"
+      ]
+    },
+    "files": [
+      "main.js",
+      "renderer.js",
+      "overlay.js",
+      "sleep.js",
+      "stats.js",
+      "index.html",
+      "overlay.html",
+      "sleep.html",
+      "stats.html",
+      "styles.css",
+      "sleep.css",
+      "stats.css",
+      "config.json",
+      "stats.json",
+      "node_modules/**/*"
+    ],
+    "directories": {
+      "buildResources": "build",
+      "output": "dist"
+    }
+  },
+  "devDependencies": {
+    "electron": "^39.2.3",
+    "electron-builder": "^26.0.12"
+  },
+  "dependencies": {
+    "asciichart": "^1.5.25",
+    "chartscii": "^3.2.0"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "podcastDirectory": "/Users/harpergibbs/Podcasts",
+  "playedEpisodes": {
+    "e31784f1.mp3": {
+      "played": true,
+      "position": 39.538267
+    },
+    "842ab43e.mp3": {
+      "played": true,
+      "position": 3540.794262
+    },
+    "8aa75a7d.mp3": {
+      "played": true,
+      "position": 64.711163
+    },
+    "abbe7ae5.mp3": {
+      "played": true,
+      "position": 2320.957633
+    },
+    "62e051d0.mp3": {
+      "played": true,
+      "position": 992.576067
+    }
+  }
+}

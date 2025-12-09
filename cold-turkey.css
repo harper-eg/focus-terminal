@@ -1,0 +1,35 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: transparent;
+    color: #F2F2F2;
+    font-family: 'SF Mono', 'Monaco', 'Courier New', monospace;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    height: 100vh;
+    overflow: hidden;
+}
+
+#overlay-banner {
+    background-color: #8d0e19;
+    width: 100%;
+    padding: 40px;
+    text-align: center;
+    border-bottom: 5px solid #F2F2F2;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+}
+
+#banner-text {
+    font-size: 48pt;
+    font-weight: bold;
+    color: #F2F2F2;
+    letter-spacing: 4px;
+    margin-bottom: 20px;
+}
+
+#countdown {
+    font-size: 36pt;
+    font-weight: bold;
+    color: #F2F2F2;
+}

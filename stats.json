@@ -1,0 +1,290 @@
+{
+  "workspaceTimes": {
+    "373": 381,
+    "369A": 250,
+    "320A": 67,
+    "Research": 234,
+    "Anki": 42,
+    "TEA": 23,
+    "Relaxation": 854,
+    "Misc Work": 54
+  },
+  "sessions": [
+    {
+      "workspace": "369A",
+      "startTime": 1732856400000,
+      "endTime": 1732859100000,
+      "duration": 45
+    },
+    {
+      "workspace": "Research",
+      "startTime": 1732870800000,
+      "endTime": 1732876200000,
+      "duration": 90
+    },
+    {
+      "workspace": "373",
+      "startTime": 1732900800000,
+      "endTime": 1732904400000,
+      "duration": 60
+    },
+    {
+      "workspace": "Research",
+      "startTime": 1732914000000,
+      "endTime": 1732920600000,
+      "duration": 110
+    },
+    {
+      "workspace": "Anki",
+      "startTime": 1732932000000,
+      "endTime": 1732934400000,
+      "duration": 40
+    },
+    {
+      "workspace": "Relaxation",
+      "startTime": 1764621998859,
+      "endTime": 1764622003404,
+      "duration": 0
+    },
+    {
+      "workspace": "Relaxation",
+      "startTime": 1764622105224,
+      "endTime": 1764624088790,
+      "duration": 33
+    },
+    {
+      "workspace": "369A",
+      "startTime": 1764624092128,
+      "endTime": 1764630167238,
+      "duration": 101
+    },
+    {
+      "workspace": "Relaxation",
+      "startTime": 1764630170956,
+      "endTime": 1764632908444,
+      "duration": 45
+    },
+    {
+      "workspace": "Misc Work",
+      "startTime": 1764633290303,
+      "endTime": 1764633441290,
+      "duration": 2
+    },
+    {
+      "workspace": "369A",
+      "startTime": 1764633449212,
+      "endTime": 1764633508485,
+      "duration": 0
+    },
+    {
+      "workspace": "369A",
+      "startTime": 1764633510302,
+      "endTime": 1764633764973,
+      "duration": 4
+    },
+    {
+      "workspace": "Misc Work",
+      "startTime": 1764633768340,
+      "endTime": 1764636838341,
+      "duration": 51
+    },
+    {
+      "workspace": "373",
+      "startTime": 1764636841200,
+      "endTime": 1764654368404,
+      "duration": 292
+    },
+    {
+      "workspace": "Relaxation",
+      "startTime": 1764661412271,
+      "endTime": 1764708004721,
+      "duration": 776
+    },
+    {
+      "workspace": "Relaxation",
+      "startTime": 1764708579885,
+      "endTime": 1764708606562,
+      "duration": 0
+    },
+    {
+      "workspace": "Relaxation",
+      "startTime": 1764709000306,
+      "endTime": 1764709029548,
+      "duration": 0
+    },
+    {
+      "workspace": "Relaxation",
+      "startTime": 1764711634847,
+      "endTime": 1764711690057,
+      "duration": 0
+    },
+    {
+      "workspace": "Relaxation",
+      "startTime": 1764712294190,
+      "endTime": 1764712338527,
+      "duration": 0
+    },
+    {
+      "workspace": "Relaxation",
+      "startTime": 1764712657592,
+      "endTime": 1764712708862,
+      "duration": 0
+    },
+    {
+      "workspace": "Relaxation",
+      "startTime": 1764712872138,
+      "endTime": 1764712930545,
+      "duration": 0
+    },
+    {
+      "workspace": "Relaxation",
+      "startTime": 1764713057761,
+      "endTime": 1764713105724,
+      "duration": 0
+    },
+    {
+      "workspace": "Relaxation",
+      "startTime": 1764713319254,
+      "endTime": 1764713360927,
+      "duration": 0
+    },
+    {
+      "workspace": "Relaxation",
+      "startTime": 1764713776948,
+      "endTime": 1764713818946,
+      "duration": 0
+    },
+    {
+      "workspace": "Relaxation",
+      "startTime": 1764714005964,
+      "endTime": 1764714046681,
+      "duration": 0
+    },
+    {
+      "workspace": "Relaxation",
+      "startTime": 1764714293674,
+      "endTime": 1764714334986,
+      "duration": 0
+    },
+    {
+      "workspace": "Relaxation",
+      "startTime": 1764714545015,
+      "endTime": 1764714594360,
+      "duration": 0
+    },
+    {
+      "workspace": "369A",
+      "startTime": 1764819308981,
+      "endTime": 1764819329798,
+      "duration": 0
+    },
+    {
+      "workspace": "Relaxation",
+      "startTime": 1764820115730,
+      "endTime": 1764820118980,
+      "duration": 0
+    },
+    {
+      "workspace": "Research",
+      "startTime": 1764820121850,
+      "endTime": 1764820126797,
+      "duration": 0
+    },
+    {
+      "workspace": "Relaxation",
+      "startTime": 1764820267607,
+      "endTime": 1764820277634,
+      "duration": 0
+    },
+    {
+      "workspace": "Relaxation",
+      "startTime": 1764820978438,
+      "endTime": 1764820986485,
+      "duration": 0
+    },
+    {
+      "workspace": "Relaxation",
+      "startTime": 1764821076982,
+      "endTime": 1764821089281,
+      "duration": 0
+    },
+    {
+      "workspace": "Research",
+      "startTime": 1764821347838,
+      "endTime": 1764821362101,
+      "duration": 0
+    },
+    {
+      "workspace": "369A",
+      "startTime": 1765306741789,
+      "endTime": 1765306753084,
+      "duration": 0
+    },
+    {
+      "workspace": "Relaxation",
+      "startTime": 1765317898927,
+      "endTime": 1765317915821,
+      "duration": 0
+    },
+    {
+      "workspace": "Relaxation",
+      "startTime": 1765317973626,
+      "endTime": 1765318004225,
+      "duration": 0
+    },
+    {
+      "workspace": "Misc Work",
+      "startTime": 1765318076146,
+      "endTime": 1765318092774,
+      "duration": 0
+    },
+    {
+      "workspace": "Misc Work",
+      "startTime": 1765318142821,
+      "endTime": 1765318214424,
+      "duration": 1
+    },
+    {
+      "workspace": "Anki",
+      "startTime": 1765318220784,
+      "endTime": 1765318230524,
+      "duration": 0
+    },
+    {
+      "workspace": "Relaxation",
+      "startTime": 1765318266400,
+      "endTime": 1765318290361,
+      "duration": 0
+    },
+    {
+      "workspace": "Relaxation",
+      "startTime": 1765318318383,
+      "endTime": 1765318329986,
+      "duration": 0
+    },
+    {
+      "workspace": "Relaxation",
+      "startTime": 1765318334116,
+      "endTime": 1765318340715,
+      "duration": 0
+    },
+    {
+      "workspace": "Relaxation",
+      "startTime": 1765318547611,
+      "endTime": 1765318571268,
+      "duration": 0
+    },
+    {
+      "workspace": "Relaxation",
+      "startTime": 1765318804310,
+      "endTime": 1765318837729,
+      "duration": 0
+    },
+    {
+      "workspace": "Misc Work",
+      "startTime": 1765318859763,
+      "endTime": 1765318866933,
+      "duration": 0
+    }
+  ]
+}

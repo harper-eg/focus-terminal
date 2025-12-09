@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            background: rgba(0, 0, 0, 0.85); /* Semi-transparent background */
+            margin: 0;
+            padding: 10px;
+            color: #F2F2F2;
+            font-family: 'SF Mono', 'Menlo', monospace;
+            font-size: 12px;
+            border: 1px solid #333;
+            border-radius: 5px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100vh; /* Fill the window provided */
+            box-sizing: border-box;
+            user-select: none; /* Prevent text highlighting */
+        }
+
+        #header {
+            color: #888;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        #active-task {
+            font-weight: bold;
+            color: #ff3b30; /* Red highlight */
+            margin-bottom: 5px;
+        }
+
+        #timer {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        #exit-btn {
+            background: #222;
+            border: 1px solid #555;
+            color: #F2F2F2;
+            padding: 5px 10px;
+            font-family: inherit;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        #exit-btn:hover {
+            background: #ff3b30;
+            border-color: #ff3b30;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <div id="header">Current Workspace</div>
+        <div id="active-task">IDLE</div>
+        <div id="timer">00:00:00</div>
+    </div>
+    
+    <button id="exit-btn">END SESSION</button>
+
+    <script src="overlay.js"></script>
+</body>
+</html>
