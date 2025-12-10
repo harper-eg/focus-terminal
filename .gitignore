@@ -1,3 +1,6 @@
 PODCAST_SETUP.md
 dist/**
 node_modules/**
+*.dmg
+*.zip
+.claude/**

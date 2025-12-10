@@ -5,16 +5,144 @@ const path = require('path');
 
 // Todo list management
 let todos = [];
-const todosPath = path.join(__dirname, 'todos.json');
+// Get user data path from main process (writable location for packaged app)
+const userDataPath = ipcRenderer.sendSync('get-user-data-path');
+const todosPath = path.join(userDataPath, 'todos.json');
+console.log('>>> User data path:', userDataPath);
+console.log('>>> Todos path:', todosPath);
+
+// Helper function to parse MM/DD date
+function parseTaskDate(dateStr) {
+    if (!dateStr || !dateStr.includes('/')) return null;
+    const [mm, dd] = dateStr.split('/').map(n => parseInt(n));
+    if (!mm || !dd || isNaN(mm) || isNaN(dd)) return null;
+
+    const now = new Date();
+    const year = now.getFullYear();
+    const date = new Date(year, mm - 1, dd);
+    date.setHours(0, 0, 0, 0);
+
+    return date;
+}
+
+// Helper function to get days until a date
+function getDaysUntil(dateStr) {
+    const taskDate = parseTaskDate(dateStr);
+    if (!taskDate) return null;
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const diffTime = taskDate - today;
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+    // TEMPORARY STOPGAP: Treat overdue tasks as "today"
+    // TODO: Implement more sophisticated overdue task handling in the future
+    if (diffDays < 0) return 0;
+
+    return diffDays;
+}
+
+// Categorize a task based on date and priority
+function categorizeTask(task) {
+    const daysUntil = getDaysUntil(task.date);
+    const isHigh = task.priority === 'high';
+
+    if (daysUntil === null) {
+        // No deadline
+        return isHigh ? 7 : 8;
+    } else if (daysUntil === 0) {
+        // Due today (or overdue - temporary)
+        return isHigh ? 1 : 2;
+    } else if (daysUntil === 1) {
+        // Due tomorrow
+        return isHigh ? 3 : 4;
+    } else {
+        // Due 2+ days from now
+        return isHigh ? 5 : 6;
+    }
+}
+
+// Sort tasks according to priority and date rules
+function sortTasks(tasks) {
+    if (tasks.length === 0) return [];
+
+    // Group tasks by category
+    const categories = {
+        1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: []
+    };
+
+    tasks.forEach(task => {
+        const cat = categorizeTask(task);
+        categories[cat].push(task);
+    });
+
+    // Sort within each category by date (earliest first), then by ID
+    for (let cat in categories) {
+        categories[cat].sort((a, b) => {
+            const dateA = parseTaskDate(a.date);
+            const dateB = parseTaskDate(b.date);
+
+            // Both have dates - sort by date
+            if (dateA && dateB) {
+                const diff = dateA - dateB;
+                if (diff !== 0) return diff;
+                // Same date - sort by ID to maintain stable order
+                return a.id - b.id;
+            }
+            // Only A has date (comes first)
+            if (dateA) return -1;
+            // Only B has date (comes first)
+            if (dateB) return 1;
+            // Neither has date - sort by ID
+            return a.id - b.id;
+        });
+    }
+
+    // Intersperse function - alternates between two arrays
+    function intersperse(arr1, arr2) {
+        const result = [];
+        const maxLen = Math.max(arr1.length, arr2.length);
+        for (let i = 0; i < maxLen; i++) {
+            if (i < arr1.length) result.push(arr1[i]);
+            if (i < arr2.length) result.push(arr2[i]);
+        }
+        return result;
+    }
+
+    // Build final sorted array according to precedence rules
+    const sorted = [
+        ...categories[1],  // High priority, due today
+        ...categories[2],  // Low priority, due today
+        ...categories[3],  // High priority, due tomorrow
+        ...categories[4],  // Low priority, due tomorrow
+        ...intersperse(categories[5], categories[7]),  // Intersperse: High priority future & High priority no deadline
+        ...intersperse(categories[6], categories[8])   // Intersperse: Low priority future & Low priority no deadline
+    ];
+
+    // Mark the first task as top task
+    sorted.forEach(task => task.isTopTask = false);
+    if (sorted.length > 0) {
+        sorted[0].isTopTask = true;
+    }
+
+    return sorted;
+}
 
 // Load todos from file
 function loadTodos() {
     try {
+        console.log('>>> Loading todos from:', todosPath);
         const data = fs.readFileSync(todosPath, 'utf8');
         const parsed = JSON.parse(data);
         todos = parsed.tasks || [];
+        console.log('>>> Loaded todos:', todos);
+
+        // Apply sorting after loading
+        todos = sortTasks(todos);
+        console.log('>>> Sorted todos:', todos);
     } catch (error) {
-        console.error('Error loading todos:', error);
+        console.error('!!! Error loading todos:', error);
         todos = [];
     }
 }
@@ -22,10 +150,13 @@ function loadTodos() {
 // Save todos to file
 function saveTodos() {
     try {
+        console.log('>>> Saving todos to:', todosPath);
+        console.log('>>> Todos data:', todos);
         const data = { tasks: todos };
         fs.writeFileSync(todosPath, JSON.stringify(data, null, 2));
+        console.log('>>> Todos saved successfully!');
     } catch (error) {
-        console.error('Error saving todos:', error);
+        console.error('!!! Error saving todos:', error);
     }
 }
 
@@ -38,18 +169,9 @@ function renderTodos() {
         return;
     }
 
-    // Find the top task
-    const topTaskIndex = todos.findIndex(task => task.isTopTask);
-    const topTask = topTaskIndex >= 0 ? todos[topTaskIndex] : todos[0];
-
-    // Ensure only one task is marked as top
-    if (topTaskIndex < 0 && todos.length > 0) {
-        todos[0].isTopTask = true;
-        saveTodos();
-    }
-
+    // Sorting ensures todos[0] is always the top task
     // Render top task
-    const topTaskElement = createTodoElement(topTask, true);
+    const topTaskElement = createTodoElement(todos[0], true);
     todoList.appendChild(topTaskElement);
 
     // Add separator
@@ -59,12 +181,10 @@ function renderTodos() {
     todoList.appendChild(separator);
 
     // Render remaining tasks
-    todos.forEach(task => {
-        if (!task.isTopTask) {
-            const taskElement = createTodoElement(task, false);
-            todoList.appendChild(taskElement);
-        }
-    });
+    for (let i = 1; i < todos.length; i++) {
+        const taskElement = createTodoElement(todos[i], false);
+        todoList.appendChild(taskElement);
+    }
 
     // Setup click handlers
     setupTodoCheckboxes();
@@ -241,6 +361,14 @@ ipcRenderer.on('force-repaint', () => {
     }
 });
 
+// REFRESH TODOS
+// Listen for refresh request from main process (e.g., when task added from overlay)
+ipcRenderer.on('refresh-todos', () => {
+    console.log('>> Refreshing todos...');
+    loadTodos();
+    renderTodos();
+});
+
 // TODO LIST FUNCTIONALITY
 function setupTodoCheckboxes() {
     const checkboxes = document.querySelectorAll('.todo-checkbox');
@@ -253,7 +381,6 @@ function setupTodoCheckboxes() {
             const todoItem = this.closest('.todo-item');
             if (todoItem) {
                 const taskId = parseInt(todoItem.getAttribute('data-task-id'));
-                const isTopTask = todoItem.hasAttribute('data-top-task');
 
                 todoItem.style.transition = 'opacity 0.3s';
                 todoItem.style.opacity = '0';
@@ -262,10 +389,8 @@ function setupTodoCheckboxes() {
                     // Remove task from data
                     todos = todos.filter(task => task.id !== taskId);
 
-                    // If it was the top task, promote the next one
-                    if (isTopTask && todos.length > 0) {
-                        todos[0].isTopTask = true;
-                    }
+                    // Apply sorting after removing task (will automatically handle top task)
+                    todos = sortTasks(todos);
 
                     // Save and re-render
                     saveTodos();
@@ -274,6 +399,13 @@ function setupTodoCheckboxes() {
             }
         });
     });
+}
+
+// Helper function to get default date value with current month
+function getDefaultDateValue() {
+    const now = new Date();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    return `${month}/`;
 }
 
 // ADD TASK FUNCTIONALITY
@@ -295,6 +427,9 @@ function setupAddTaskBar() {
         console.error('>>> Missing elements! Cannot setup add task bar.');
         return;
     }
+
+    // Set initial date value to current month
+    dateInput.value = getDefaultDateValue();
 
     // Priority toggle
     priorityToggle.addEventListener('click', () => {
@@ -368,7 +503,7 @@ function setupAddTaskBar() {
                 e.preventDefault();
                 e.stopPropagation();
                 dateInput.focus();
-                dateInput.setSelectionRange(0, 2);
+                dateInput.setSelectionRange(dateInput.value.length, dateInput.value.length);
             } else {
                 console.log('Allowing normal cursor movement');
                 e.stopPropagation(); // Stop event from bubbling to whole bar handler
@@ -391,7 +526,7 @@ function setupAddTaskBar() {
             e.preventDefault();
             e.stopPropagation();
             dateInput.focus();
-            dateInput.setSelectionRange(0, 2);
+            dateInput.setSelectionRange(dateInput.value.length, dateInput.value.length);
         } else if (e.key === 'Escape') {
             // Esc -> Main Menu State
             e.preventDefault();
@@ -441,7 +576,7 @@ function setupAddTaskBar() {
             e.preventDefault();
             e.stopPropagation();
             dateInput.focus();
-            dateInput.setSelectionRange(0, 2);
+            dateInput.setSelectionRange(dateInput.value.length, dateInput.value.length);
         } else if (e.key === 'ArrowRight') {
             // Right -> Whole Bar State
             console.log('>>> Priority: ArrowRight -> focusing whole bar');
@@ -522,12 +657,16 @@ function addTask() {
     };
 
     todos.push(newTask);
+
+    // Apply sorting after adding new task
+    todos = sortTasks(todos);
+
     saveTodos();
     renderTodos();
 
     // Clear inputs
     textInput.value = '';
-    dateInput.value = '';
+    dateInput.value = getDefaultDateValue();
     priorityToggle.setAttribute('data-priority', 'high');
     priorityToggle.textContent = 'HP';
 

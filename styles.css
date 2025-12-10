@@ -50,7 +50,7 @@ body {
 }
 
 #todo-box {
-    border: 1px solid #ffffff;
+    /* border: 1px solid #ffffff;
     padding: 15px;
     margin-top: 5px;
     min-height: 180px;
@@ -60,14 +60,41 @@ body {
     display: flex;
     flex-direction: column;
     max-height: 400px;
-    overflow: visible;
+    overflow: visible; */
+
+    border: 1px solid #ffffff;
+    padding: 15px;
+    margin-top: 5px;
+    min-height: 180px;
+    width: 100%;
+    max-width: 500px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    
+    /* RE-ADDED: Restrict height so content can "disappear" */
+    max-height: 400px; 
 }
 
 #todo-list {
-    list-style: none;
+    /* list-style: none;
     padding: 0;
     margin: 0;
     flex: 1;
+    min-height: 0; */
+
+    list-style: none;
+    margin: 0;
+
+    /* THE TRICK: Widen the box to the left, push text back to the right */
+    margin-left: -50px;  /* Pull box left over the border */
+    padding-left: 50px;  /* Push text back to original spot */
+    width: calc(100% + 50px); /* Fix width calculation */
+
+    /* Scroll settings */
+    flex: 1;             /* Fill available space */
+    overflow-y: auto;    /* Enable vertical scrolling */
+    overflow-x: hidden;  /* No horizontal scrollbar */
     min-height: 0;
 }
 
@@ -128,6 +155,8 @@ body {
     align-items: center;
     flex-shrink: 0;
     outline: none;
+    background-color: #000000; /* Ensures text is covered up */
+    z-index: 10;
 }
 
 #add-task-bar:focus {

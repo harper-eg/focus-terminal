@@ -2,35 +2,14 @@
   "tasks": [
     {
       "id": 1,
-      "text": "1",
+      "text": "test",
       "date": "",
       "priority": "high",
       "isTopTask": true
     },
     {
       "id": 2,
-      "text": "2",
-      "date": "",
-      "priority": "high",
-      "isTopTask": false
-    },
-    {
-      "id": 3,
-      "text": "3",
-      "date": "",
-      "priority": "high",
-      "isTopTask": false
-    },
-    {
-      "id": 4,
-      "text": "4",
-      "date": "",
-      "priority": "high",
-      "isTopTask": false
-    },
-    {
-      "id": 5,
-      "text": "5",
+      "text": "test 2",
       "date": "",
       "priority": "high",
       "isTopTask": false

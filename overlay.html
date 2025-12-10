@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <style>
         body {
-            background: rgba(0, 0, 0, 0.85); /* Semi-transparent background */
+            background: rgba(0, 0, 0, 0.95); /* Semi-transparent background */
             margin: 0;
             padding: 10px;
             color: #F2F2F2;
@@ -21,12 +21,65 @@
             user-select: none; /* Prevent text highlighting */
         }
 
-        #header {
+        #top-task-section {
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #333;
+        }
+
+        #top-task-header {
             color: #888;
             font-size: 10px;
             text-transform: uppercase;
             letter-spacing: 1px;
             margin-bottom: 5px;
+        }
+
+        #top-task-display {
+            display: flex;
+            align-items: center;
+            color: #F2F2F2;
+        }
+
+        #top-task-arrow {
+            color: #00ff00;
+            font-size: 14px;
+            margin-right: 8px;
+        }
+
+        #top-task-text {
+            font-size: 12px;
+            line-height: 1.3;
+        }
+
+        #workspace-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        #header {
+            color: #888;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        #add-task-btn {
+            background: #222;
+            border: 1px solid #555;
+            color: #F2F2F2;
+            padding: 2px 6px;
+            font-family: inherit;
+            font-size: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        #add-task-btn:hover {
+            background: #333;
+            border-color: #888;
         }
 
         #active-task {
@@ -61,11 +114,22 @@
 </head>
 <body>
     <div>
-        <div id="header">Current Workspace</div>
+        <div id="top-task-section">
+            <div id="top-task-header">Top Task</div>
+            <div id="top-task-display">
+                <span id="top-task-arrow">→</span>
+                <span id="top-task-text">No tasks</span>
+            </div>
+        </div>
+
+        <div id="workspace-header-row">
+            <div id="header">Current Workspace</div>
+            <button id="add-task-btn">+</button>
+        </div>
         <div id="active-task">IDLE</div>
         <div id="timer">00:00:00</div>
     </div>
-    
+
     <button id="exit-btn">END SESSION</button>
 
     <script src="overlay.js"></script>

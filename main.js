@@ -5,6 +5,7 @@ const path = require('path');
 
 let mainWindow;
 let overlayWindow;
+let taskEntryOverlayWindow;
 let panicCountdownWindow;
 let panicLinksWindow;
 let blockerWindows = []; // Black screens for non-target displays
@@ -22,10 +23,15 @@ let panicDecision = null; // Track whether user chose 'work' or 'no-work'
 let coldTurkeyOverlay = null; // Cold Turkey activation overlay
 let panicModeActive = false; // Track if panic mode is currently running
 
+// Get user data directory (writable location for packaged app)
+function getUserDataPath() {
+    return app.getPath('userData');
+}
+
 // Load or initialize statistics configuration
 function loadStatsConfig() {
     try {
-        const statsPath = path.join(__dirname, 'stats.json');
+        const statsPath = path.join(getUserDataPath(), 'stats.json');
         if (fs.existsSync(statsPath)) {
             const data = fs.readFileSync(statsPath, 'utf8');
             statsConfig = JSON.parse(data);
@@ -48,7 +54,7 @@ function loadStatsConfig() {
 
 function saveStatsConfig() {
     try {
-        const statsPath = path.join(__dirname, 'stats.json');
+        const statsPath = path.join(getUserDataPath(), 'stats.json');
         fs.writeFileSync(statsPath, JSON.stringify(statsConfig, null, 2));
     } catch (error) {
         console.error('Error saving stats config:', error);
@@ -294,9 +300,9 @@ function createOverlay() {
 
     overlayWindow = new BrowserWindow({
         width: 180,
-        height: 140,
+        height: 180,
         x: displayX + 20,  // 20px from left edge of target display
-        y: displayY + height - 160,  // 160px from bottom of target display
+        y: displayY + height - 200,  // 220px from bottom of target display
         frame: false,
         transparent: true,
         alwaysOnTop: true,
@@ -315,6 +321,55 @@ function createOverlay() {
     try {
         overlayWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
     } catch (e) { console.log(e); }
+}
+
+// Create task entry overlay window
+function createTaskEntryOverlay() {
+    // Close existing one if open
+    if (taskEntryOverlayWindow) {
+        taskEntryOverlayWindow.close();
+        taskEntryOverlayWindow = null;
+    }
+
+    console.log(">> Creating Task Entry Overlay...");
+    const display = getTargetDisplay();
+    const { width, height } = display.workArea;
+    const { x: displayX, y: displayY } = display.workArea;
+
+    // Center the window on the target display
+    const windowWidth = 400;
+    const windowHeight = 180;
+    const x = displayX + Math.floor((width - windowWidth) / 2);
+    const y = displayY + Math.floor((height - windowHeight) / 2);
+
+    taskEntryOverlayWindow = new BrowserWindow({
+        width: windowWidth,
+        height: windowHeight,
+        x: x,
+        y: y,
+        frame: false,
+        transparent: true,
+        alwaysOnTop: true,
+        resizable: false,
+        show: true,
+        focusable: true,
+        webPreferences: {
+            nodeIntegration: true,
+            contextIsolation: false
+        }
+    });
+
+    taskEntryOverlayWindow.loadFile('task-entry-overlay.html');
+
+    // Set up workspace visibility
+    try {
+        taskEntryOverlayWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
+    } catch (e) { console.log(e); }
+
+    // Close when window loses focus (optional - can be removed if you want it to stay)
+    taskEntryOverlayWindow.on('blur', () => {
+        // Don't auto-close on blur to allow user to click around if needed
+    });
 }
 
 // Check if current time is between 7pm and 11pm
@@ -376,7 +431,7 @@ function exitSleepMode() {
 // Load panic mode file path configuration
 function loadPanicModeConfig() {
     try {
-        const configPath = path.join(__dirname, 'panic-config.json');
+        const configPath = path.join(getUserDataPath(), 'panic-config.json');
         if (fs.existsSync(configPath)) {
             const data = fs.readFileSync(configPath, 'utf8');
             const config = JSON.parse(data);
@@ -393,7 +448,7 @@ function loadPanicModeConfig() {
 // Save panic mode file path configuration
 function savePanicModeConfig(filePath) {
     try {
-        const configPath = path.join(__dirname, 'panic-config.json');
+        const configPath = path.join(getUserDataPath(), 'panic-config.json');
         const config = { linkDumpPath: filePath };
         fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
         panicModeFilePath = filePath;
@@ -795,8 +850,13 @@ app.whenReady().then(() => {
     // Handle display changes (monitors added/removed/reconfigured)
     screen.on('display-added', (_event, newDisplay) => {
         console.log(`>> Display added: ${newDisplay.id}`);
-        // Recreate blocker windows to include the new display
-        createBlockerWindows();
+        // Only recreate blocker windows if we're in dashboard mode (not workspace mode)
+        if (!currentWorkspace) {
+            createBlockerWindows();
+            console.log('>> Blocker windows recreated for new display');
+        } else {
+            console.log('>> In workspace mode, skipping blocker window creation');
+        }
     });
 
     screen.on('display-removed', (_event, oldDisplay) => {
@@ -812,8 +872,13 @@ app.whenReady().then(() => {
                 mainWindow.setBounds({ x, y, width, height });
             }
         }
-        // Recreate blocker windows for remaining displays
-        createBlockerWindows();
+        // Only recreate blocker windows if we're in dashboard mode (not workspace mode)
+        if (!currentWorkspace) {
+            createBlockerWindows();
+            console.log('>> Blocker windows recreated after display removal');
+        } else {
+            console.log('>> In workspace mode, skipping blocker window creation');
+        }
     });
 
     screen.on('display-metrics-changed', (_event, changedDisplay, changedMetrics) => {
@@ -830,11 +895,16 @@ app.whenReady().then(() => {
                 const { x: displayX, y: displayY, height: displayHeight } = changedDisplay.workArea;
                 overlayWindow.setBounds({
                     x: displayX + 20,
-                    y: displayY + displayHeight - 160,
+                    y: displayY + displayHeight - 200,
                     width: 180,
-                    height: 140
+                    height: 180
                 });
             }
+        }
+        // Only recreate blocker windows if we're in dashboard mode
+        if (!currentWorkspace && changedMetrics.includes('bounds')) {
+            createBlockerWindows();
+            console.log('>> Blocker windows recreated after display metrics change');
         }
     });
 });
@@ -899,6 +969,12 @@ function showDashboard() {
         mainWindow.setKiosk(true);
         mainWindow.show();
         mainWindow.focus();
+
+        // Refresh todos when returning to dashboard
+        setTimeout(() => {
+            mainWindow.webContents.send('refresh-todos');
+            console.log(">> Todos refreshed on dashboard return");
+        }, 100);
     }
     if (overlayWindow) {
         overlayWindow.hide();
@@ -918,6 +994,20 @@ function startWorkspaceMode(workspaceName) {
 
     const fullName = `${workspaceName}`;
     console.log(`> LAUNCHING: ${fullName}`);
+
+    // Read top task from todos.json
+    let topTask = null;
+    try {
+        const todosPath = path.join(getUserDataPath(), 'todos.json');
+        const todosData = fs.readFileSync(todosPath, 'utf8');
+        const todos = JSON.parse(todosData);
+        if (todos.tasks && todos.tasks.length > 0) {
+            // First task in the sorted array is the top task
+            topTask = todos.tasks[0].text;
+        }
+    } catch (error) {
+        console.log('>> No top task found or error reading todos:', error.message);
+    }
 
     // 2. Run Shortcut
     const child = spawn('/usr/bin/shortcuts', ['run', fullName], {
@@ -943,7 +1033,7 @@ function startWorkspaceMode(workspaceName) {
                 overlayWindow.show();
                 // Set Opacity: 0 = Ghost Mode, 1.0 = Debug Mode
                 overlayWindow.setOpacity(0);
-                overlayWindow.webContents.send('start-timer', workspaceName);
+                overlayWindow.webContents.send('start-timer', workspaceName, topTask);
             }
         }, 1000);
     }
@@ -969,6 +1059,38 @@ ipcMain.on('get-stats', (event) => {
 
 ipcMain.on('stop-workspace', () => {
     showDashboard();
+});
+
+// Task entry overlay handlers
+ipcMain.on('open-task-entry', () => {
+    createTaskEntryOverlay();
+});
+
+ipcMain.on('close-task-entry', () => {
+    if (taskEntryOverlayWindow) {
+        taskEntryOverlayWindow.close();
+        taskEntryOverlayWindow = null;
+    }
+});
+
+ipcMain.on('task-added', () => {
+    // Refresh the overlay to show updated top task
+    if (overlayWindow && overlayWindow.isVisible()) {
+        // Reload todos and update the overlay
+        try {
+            const todosPath = path.join(getUserDataPath(), 'todos.json');
+            const todosData = fs.readFileSync(todosPath, 'utf8');
+            const todos = JSON.parse(todosData);
+            const topTask = (todos.tasks && todos.tasks.length > 0) ? todos.tasks[0].text : null;
+            overlayWindow.webContents.send('update-top-task', topTask);
+        } catch (error) {
+            console.log('Error refreshing top task:', error.message);
+        }
+    }
+    // Also refresh the main dashboard if it's visible
+    if (mainWindow && mainWindow.isVisible()) {
+        mainWindow.webContents.send('refresh-todos');
+    }
 });
 
 ipcMain.on('overlay-hover', (_event, state) => {
@@ -1017,4 +1139,8 @@ ipcMain.on('break-countdown-finished', () => {
 
 ipcMain.on('set-panic-file-path', (_event, filePath) => {
     savePanicModeConfig(filePath);
+});
+
+ipcMain.on('get-user-data-path', (event) => {
+    event.returnValue = getUserDataPath();
 });
